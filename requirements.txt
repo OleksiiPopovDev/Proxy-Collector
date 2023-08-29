@@ -1,0 +1,6 @@
+proxybroker @ git+https://github.com/bluet/proxybroker2.git@cadfc4c589b55de481e506a14d8c7f6ab9b72cdd
+alive-progress
+requests
+python-dotenv
+peewee
+pymysql
