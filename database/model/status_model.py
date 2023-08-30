@@ -11,4 +11,4 @@ class Status(BaseModel):
     is_working = BooleanField(default=False)
     response_time = FloatField(null=True)
     response = TextField(null=True)
-    date = DateTimeField(default=datetime.now)
+    created_at = DateTimeField(default=datetime.now)

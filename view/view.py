@@ -15,10 +15,17 @@ class View:
         self.show_menu()
 
     def __check_options(self):
+        if '--help' in sys.argv:
+            for menu_item in self.__menu_items:
+                option = '--%s' % menu_item.option_name
+                print('\t%s\t\t - %s' % (option, menu_item.title))
+            exit()
+
         for menu_item in self.__menu_items:
             option = '--%s' % menu_item.option_name
             if option in sys.argv:
                 self.__call_handler(menu_item.handler)
+                exit()
 
     def show_menu(self) -> None:
         print(Color.ColorOff.value)
@@ -32,20 +39,21 @@ class View:
 
     def __propose_choose(self) -> None:
         try:
-            selected_menu = int(input(self.paint("\t\t{Green}Choose menu number {BGreen}>> "))) - 1
+            selected_menu = int(input(self.paint("\t\t{Green}Choose menu number {ColorOff}>> "))) - 1
             menu_item = self.__menu_items[selected_menu]
             self.__call_handler(menu_item.handler)
+            self.show_menu()
 
         except (RuntimeError, ValueError, KeyboardInterrupt, IndexError):
             print(self.paint('\t\t{BRed}Error: {Red} Incorrect selected menu!{ColorOff}\n'))
             self.__propose_choose()
 
-    def __call_handler(self, handler) -> None:
+    @staticmethod
+    def __call_handler(handler) -> None:
         if not callable(handler):
             raise RuntimeError('Item has incorrect Callable type. Please, ask developer fix it!')
 
         handler()
-        self.show_menu()
 
     @staticmethod
     def separator() -> None:
