@@ -4,7 +4,6 @@ from dto.country_dto import CountryDto
 from proxybroker import Broker
 from asyncio import Queue
 from repository.country_repository import CountryRepository
-from repository.proxy_repository import ProxyRepository
 from view.view import View
 from alive_progress import alive_bar
 import asyncio
@@ -72,7 +71,8 @@ class BrokerProxyGatherService(ProxyGatherAbstract):
 
         return countries
 
-    def __prepare_proxies(self, proxies: list[ProxyDto], countries: dict[CountryDto]) -> list[ProxyDto]:
+    @staticmethod
+    def __prepare_proxies(proxies: list[ProxyDto], countries: dict[CountryDto]) -> list[ProxyDto]:
         index: int = 0
         for proxy in proxies:
             country_name = proxy.country_name
