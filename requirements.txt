@@ -1,6 +1,8 @@
 proxybroker @ git+https://github.com/bluet/proxybroker2.git@cadfc4c589b55de481e506a14d8c7f6ab9b72cdd
 alive-progress
-requests
-python-dotenv
-peewee
+requests~=2.31.0
+python-dotenv~=1.0.0
+peewee~=3.16.3
 pymysql
+aiohttp~=3.8.5
+urllib3==1.26.7

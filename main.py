@@ -5,6 +5,7 @@ from view.menu_item_dto import MenuItemDto
 from database.migration import Migration
 from service.country_service import CountryService
 from service.gather_proxy_service import GatherProxyService
+from service.checker_service import CheckerService
 from service.gather.link_proxy_gather_service import LinkProxyGatherService
 from service.gather.broker_proxy_gather_service import BrokerProxyGatherService
 import sys
@@ -66,7 +67,7 @@ def run_proxybroker():
         count_str = search_list[0].split('=')
         count: int = int(count_str[1])
 
-    count = count if count <= 100 else 1000
+    count = count if count <= 1000 else 1000
     broker = BrokerProxyGatherService()
     broker.set_limit(count)
     gather = GatherProxyService(broker)
@@ -74,7 +75,8 @@ def run_proxybroker():
 
 
 def run_checker():
-    print('I\'m Checker!')
+    checker = CheckerService()
+    checker.run()
 
 
 def main():
@@ -82,7 +84,7 @@ def main():
         MenuItemDto('Run Migration Database', 'migrate', run_migration),
         MenuItemDto('Gather IP from sources', 'link-gather', run_gather),
         MenuItemDto('Found IP via ProxyBroker', 'broker-gather', run_proxybroker),
-        MenuItemDto('Check New proxies', 'test', run_checker)
+        MenuItemDto('Check New proxies', 'check', run_checker)
     ], banner())
 
 
