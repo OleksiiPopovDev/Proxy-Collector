@@ -1,3 +1,4 @@
+import re
 from dotenv import load_dotenv
 from view.view import View
 from view.menu_item_dto import MenuItemDto
@@ -5,6 +6,7 @@ from database.migration import Migration
 from service.country_service import CountryService
 from service.gather_proxy_service import GatherProxyService
 from service.gather.link_proxy_gather_service import LinkProxyGatherService
+from service.gather.broker_proxy_gather_service import BrokerProxyGatherService
 import sys
 import os
 
@@ -50,16 +52,37 @@ def run_gather():
     View.separator()
 
 
-def call_second():
-    print('I\'m Second function!')
+def run_proxybroker():
+    compile_re = re.compile('-count=\d+')
+    search_list = list(filter(compile_re.match, sys.argv))
+    if len(search_list) == 0:
+        question: str = ('\t{Yellow}How many Proxies IPs search? '
+                         '\n\t{Red}[{ColorOff}Default: {BCyan}100{Red}]{ColorOff} -> ')
+        try:
+            count = int(input(View.paint(question))) or 100
+        except ValueError:
+            count = 100
+    else:
+        count_str = search_list[0].split('=')
+        count: int = int(count_str[1])
+
+    count = count if count <= 100 else 1000
+    broker = BrokerProxyGatherService()
+    broker.set_limit(count)
+    gather = GatherProxyService(broker)
+    gather.run()
+
+
+def run_checker():
+    print('I\'m Checker!')
 
 
 def main():
     View([
         MenuItemDto('Run Migration Database', 'migrate', run_migration),
         MenuItemDto('Gather IP from sources', 'link-gather', run_gather),
-        MenuItemDto('Found IP via ProxyBroker', 'second', call_second),
-        MenuItemDto('Check New proxies', 'test', call_second)
+        MenuItemDto('Found IP via ProxyBroker', 'broker-gather', run_proxybroker),
+        MenuItemDto('Check New proxies', 'test', run_checker)
     ], banner())
 
 

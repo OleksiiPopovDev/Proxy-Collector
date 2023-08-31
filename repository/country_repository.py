@@ -12,3 +12,7 @@ class CountryRepository:
             latitude=country.latitude,
             longitude=country.longitude
         )
+
+    @staticmethod
+    def get_list(countries_name: list[str]):
+        return Country.select().where(Country.name << countries_name)

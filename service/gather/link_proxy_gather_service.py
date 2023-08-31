@@ -1,6 +1,8 @@
 from service.gather.proxy_gather_abstract import ProxyGatherAbstract
+from view.view import View
 from dto.proxy_dto import ProxyDto
 import requests
+from requests.exceptions import RequestException
 
 
 class LinkProxyGatherService(ProxyGatherAbstract):
@@ -13,7 +15,12 @@ class LinkProxyGatherService(ProxyGatherAbstract):
             return self._proxy_list
 
     def __call_source(self, link: str):
-        response = requests.get(link)
+        try:
+            response = requests.get(link)
+        except RequestException as message:
+            print(View.paint('\t\t{BYellow}%s {ColorOff}>> {BRed}Error: {Red} %s{ColorOff}') % (link, message))
+            return
+
         if response.status_code != 200:
             return
 
