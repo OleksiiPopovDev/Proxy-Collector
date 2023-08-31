@@ -75,8 +75,7 @@ class CheckerService:
 
             status = StatusDto(
                 ip=ProxyDto(ip=ip, port=port),
-                #country=CountryDto(name=json_data['country'], code=json_data['cc']),
-                country=CountryDto(name='fuck', code=json_data['cc']),
+                country=CountryDto(name=json_data['country'], code=json_data['cc']),
                 is_working=True,
                 status=ProxyStatus.VALID,
                 response_time=time_count,
