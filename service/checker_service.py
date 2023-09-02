@@ -12,13 +12,13 @@ from dto.status_dto import StatusDto
 from dto.country_dto import CountryDto
 from dto.proxy_dto import ProxyDto
 from database.enum.proxy_status import ProxyStatus
-
+import os
 
 class CheckerService:
     def __init__(self):
         self.proxy_repository = ProxyRepository()
-        self.pack: int = 200
-        self.timeout: int = 60
+        self.pack: int = int(os.getenv('NUM_PROXIES_IN_CHECK_PACK'))
+        self.timeout: int = int(os.getenv('TIMEOUT_CHECKER'))
 
     def run(self) -> None:
         count: int = self.proxy_repository.get_unchecked_count()
