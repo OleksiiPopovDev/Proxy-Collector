@@ -1,5 +1,6 @@
 from service.gather.proxy_gather_abstract import ProxyGatherAbstract
 from view.view import View
+from alive_progress import alive_bar
 from dto.proxy_dto import ProxyDto
 import requests
 from requests.exceptions import RequestException
@@ -9,8 +10,13 @@ class LinkProxyGatherService(ProxyGatherAbstract):
     def get_proxy_list(self) -> list[ProxyDto]:
         with open('resources/source_txt_proxies_links.txt', 'r') as file:
             links: list[str] = file.readlines()
-            for link in links:
-                self.__call_source(link.strip())
+            with alive_bar(len(links)) as bar:
+                string: str = 'Parsing Sources:'
+                count_spaces: int = View.get_count_spaces_for_line_up(string, 25)
+                bar.title(View.paint('\t{Yellow}%s%s{ColorOff}') % (string, ' ' * count_spaces))
+                for link in links:
+                    self.__call_source(link.strip())
+                    bar()
 
             return self._proxy_list
 
