@@ -19,6 +19,7 @@ class GatherProxyService:
 
     def run(self):
         proxies_list = self.proxy_gather.get_proxy_list()
+        proxies_list.sort(key=lambda proxy_data: proxy_data.ip)
         with alive_bar(len(proxies_list)) as bar:
             for proxy in proxies_list:
                 ip = '%s:%d' % (proxy.ip, proxy.port)
