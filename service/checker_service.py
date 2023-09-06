@@ -17,7 +17,7 @@ import os
 class CheckerService:
     def __init__(self):
         self.proxy_repository = ProxyRepository()
-        self.pack: int = int(os.getenv('NUM_PROXIES_IN_CHECK_PACK'))
+        self.pack: int = int(os.getenv('NUM_PROXIES_IN_CHECK_BATCH'))
         self.timeout: int = int(os.getenv('PROXY_RESPONSE_TIMEOUT'))
 
     def run(self) -> None:

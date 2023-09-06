@@ -45,6 +45,6 @@ class Migration(Connector):
         if not os.path.exists(dump_directory):
             os.makedirs(dump_directory)
 
-        db_file: str = 'resources/%s.db' % os.getenv('DB_FILE_NAME')
+        db_file: str = 'resources/%s.db' % os.getenv('DATABASE_NAME')
         if os.path.isfile(db_file):
-            os.rename(db_file, 'resources/dumps/%s_%s.db' % (os.getenv('DB_FILE_NAME'), time.time()))
+            os.rename(db_file, 'resources/dumps/%s_%s.db' % (os.getenv('DATABASE_NAME'), time.time()))

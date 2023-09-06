@@ -1,0 +1,12 @@
+ARG DOCKER_MYSQL_VERSION
+
+FROM mysql:${DOCKER_MYSQL_VERSION}
+
+MAINTAINER Oleksii Popov <popovaleksey1991@gmail.com>
+
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+EXPOSE 3306 3306
+
+CMD ["mysqld"]

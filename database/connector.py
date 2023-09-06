@@ -9,15 +9,15 @@ class Connector:
         load_dotenv()
         if os.getenv('DB_TYPE') == 'MySQL':
             return MySQLDatabase(
-                host=os.getenv('MYSQL_HOST'),
+                host=os.getenv('HOST'),
                 port=int(os.getenv('MYSQL_PORT')),
                 user=os.getenv('MYSQL_USER'),
                 password=os.getenv('MYSQL_PASS'),
-                database=os.getenv('DB_FILE_NAME')
+                database=os.getenv('DATABASE_NAME')
             )
 
         if os.getenv('DB_TYPE') == 'SQLite':
-            return SqliteDatabase('database/%s.db' % os.getenv('DB_FILE_NAME'))
+            return SqliteDatabase('database/%s.db' % os.getenv('DATABASE_NAME'))
 
         raise RuntimeError('Set correct type database in your .env file')
 

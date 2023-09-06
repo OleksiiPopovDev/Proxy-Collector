@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mysql:
+    platform: linux/x86_64
+    build:
+      context: docker
+      dockerfile: MysqlDocker
+      args:
+        - DOCKER_MYSQL_VERSION=${DOCKER_MYSQL_VERSION}
+    env_file:
+      - .env
+    container_name: ${CONTAINER_NAME_MYSQL}
+    networks:
+      - DevEnvNetwork
+    ports:
+      - ${HOST}:${MYSQL_PORT}:3306
+    volumes:
+      - ./docker/config:/etc/mysql/conf.d
+      - ./docker/database:/var/database
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASS}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASS}
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ${CONTAINER_NAME_GRAFANA}
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - DevEnvNetwork
+    ports:
+      - ${HOST}:${GRAFANA_PORT}:3000
+
+networks:
+  DevEnvNetwork:
+    name: DevEnvNetwork
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.29.0.0/16
