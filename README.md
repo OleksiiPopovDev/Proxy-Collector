@@ -6,7 +6,7 @@ Script on Python for finding and checking proxies from open sources.
 
 <img src="./doc/preview-cli.gif" alt="How it works" style="width:100%;" />
 
-> [!INFO]  
+> [!IMPORTANT]  
 >  Before installation **if you're use MacOS**
 1. Copy content bellow into **/Library/LaunchDaemons/com.docker_1270045_alias.plist**
 ```xml
