@@ -49,6 +49,6 @@ make help
 ## Grafana
 In a root of project you can find Grafana config **grafana.json** for monitoring of process.
 
-By default, grafana installing with project http://127.0.0.25:3000 (user: `admin` pass: `admin`)
+By default, grafana installing with project http://127.0.0.45:3000 (user: `admin` pass: `admin`)
 
 <img src="./doc/preview-grafana.gif" alt="Grafana" style="width:100%;" />
