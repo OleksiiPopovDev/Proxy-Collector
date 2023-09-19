@@ -1,7 +1,6 @@
 import re
 from dotenv import load_dotenv
-from view.view import View
-from view.menu_item_dto import MenuItemDto
+from bash_menu_builder import View, MenuItemDto
 from database.migration import Migration
 from service.country_service import CountryService
 from service.gather_proxy_service import GatherProxyService
@@ -79,14 +78,10 @@ def run_checker():
     checker.run()
 
 
-def main():
+if __name__ == "__main__":
     View([
         MenuItemDto('Run Migration Database', 'migrate', run_migration),
         MenuItemDto('Gather IP from sources', 'link-gather', run_gather),
         MenuItemDto('Found IP via ProxyBroker', 'broker-gather', run_proxybroker),
         MenuItemDto('Check New proxies', 'check', run_checker)
     ], banner())
-
-
-if __name__ == "__main__":
-    main()

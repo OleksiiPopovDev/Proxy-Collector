@@ -1,7 +1,7 @@
 from dto.country_dto import CountryDto
 from repository.country_repository import CountryRepository
 from alive_progress import alive_bar
-from view.view import View
+from bash_menu_builder import View
 from peewee import IntegrityError
 import json
 import time

@@ -1,6 +1,6 @@
 from database.connector import Connector
 from alive_progress import alive_bar
-from view.view import View
+from bash_menu_builder import View
 from peewee import Model
 from database.model.country_model import Country
 from database.model.ip_model import IP

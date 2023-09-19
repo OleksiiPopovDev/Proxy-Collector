@@ -7,7 +7,7 @@ import math
 from alive_progress import alive_bar
 from repository.proxy_repository import ProxyRepository
 from repository.status_repository import StatusRepository
-from view.view import View
+from bash_menu_builder import View
 from dto.status_dto import StatusDto
 from dto.country_dto import CountryDto
 from dto.proxy_dto import ProxyDto

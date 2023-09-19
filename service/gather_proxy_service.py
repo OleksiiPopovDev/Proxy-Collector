@@ -1,7 +1,7 @@
 from service.gather.proxy_gather_abstract import ProxyGatherAbstract
 from repository.proxy_repository import ProxyRepository
 from alive_progress import alive_bar
-from view.view import View
+from bash_menu_builder import View
 from peewee import IntegrityError
 
 

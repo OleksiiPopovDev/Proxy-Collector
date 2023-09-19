@@ -1,5 +1,5 @@
 from service.gather.proxy_gather_abstract import ProxyGatherAbstract
-from view.view import View
+from bash_menu_builder import View
 from alive_progress import alive_bar
 from dto.proxy_dto import ProxyDto
 import requests

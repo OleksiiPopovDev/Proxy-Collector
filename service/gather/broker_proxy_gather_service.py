@@ -4,7 +4,7 @@ from dto.country_dto import CountryDto
 from proxybroker import Broker
 from asyncio import Queue
 from repository.country_repository import CountryRepository
-from view.view import View
+from bash_menu_builder import View
 from alive_progress import alive_bar
 import asyncio
 
