@@ -1,5 +1,12 @@
 [
   {
+    "name": "Unknown",
+    "code": "XX",
+    "code_3": "XX",
+    "latitude": 0,
+    "longitude": 0
+  },
+  {
     "name": "Afghanistan",
     "code": "AF",
     "code_3": "AFG",
