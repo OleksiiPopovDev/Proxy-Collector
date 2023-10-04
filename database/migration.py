@@ -3,6 +3,7 @@ from alive_progress import alive_bar
 from bash_menu_builder import View
 from peewee import Model
 from database.model.country_model import Country
+from database.model.source_model import Source
 from database.model.ip_model import IP
 from database.model.status_model import Status
 import os
@@ -12,6 +13,7 @@ import time
 class Migration(Connector):
     __tables: dict[Model] = {
         'country': Country,
+        'source': Source,
         'ip': IP,
         'status': Status
     }

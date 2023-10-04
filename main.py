@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from bash_menu_builder import View, MenuItemDto
 from database.migration import Migration
 from service.country_service import CountryService
+from service.source_service import SourceService
 from service.gather_proxy_service import GatherProxyService
 from service.checker_service import CheckerService
 from service.gather.link_proxy_gather_service import LinkProxyGatherService
@@ -40,6 +41,13 @@ def run_migration():
     View.separator()
     country_service = CountryService()
     country_service.seed_countries()
+    View.separator()
+
+
+def run_source_validator():
+    View.separator()
+    source = SourceService()
+    source.seed_sources()
     View.separator()
 
 
@@ -81,6 +89,7 @@ def run_checker():
 if __name__ == "__main__":
     View([
         MenuItemDto('Run Migration Database', 'migrate', run_migration),
+        MenuItemDto('Validate Sources', 'migrate', run_source_validator),
         MenuItemDto('Gather IP from sources', 'link-gather', run_gather),
         MenuItemDto('Found IP via ProxyBroker', 'broker-gather', run_proxybroker),
         MenuItemDto('Check New proxies', 'check', run_checker)

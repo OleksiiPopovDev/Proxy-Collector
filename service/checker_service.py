@@ -14,6 +14,7 @@ from dto.proxy_dto import ProxyDto
 from database.enum.proxy_status import ProxyStatus
 import os
 
+
 class CheckerService:
     def __init__(self):
         self.proxy_repository = ProxyRepository()
