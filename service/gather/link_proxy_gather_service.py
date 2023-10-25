@@ -1,40 +1,45 @@
-from service.gather.proxy_gather_abstract import ProxyGatherAbstract
-from bash_menu_builder import View
 from alive_progress import alive_bar
+from bash_menu_builder import View
+
 from dto.proxy_dto import ProxyDto
-import requests
-from requests.exceptions import RequestException
+from repository.source_repository import SourceRepository
+from service.gather.proxy_gather_abstract import ProxyGatherAbstract
+from service.source_service import SourceService
 
 
 class LinkProxyGatherService(ProxyGatherAbstract):
     def get_proxy_list(self) -> list[ProxyDto]:
-        with open('resources/source_txt_proxies_links.txt', 'r') as file:
-            links: list[str] = file.readlines()
-            with alive_bar(len(links)) as bar:
-                string: str = 'Parsing Sources:'
-                count_spaces: int = View.get_count_spaces_for_line_up(string, 25)
-                bar.title(View.paint('\t{Yellow}%s%s{ColorOff}') % (string, ' ' * count_spaces))
-                for link in links:
-                    self.__call_source(link.strip())
+        proxy_list: list[ProxyDto] = []
+        source_service = SourceService()
+        sources = list(SourceRepository.get_list())
+        with alive_bar(len(sources)) as bar:
+            bar.title(self.__output_title(0))
+            for source_db in sources:
+                source_real = source_service.get_source_content(link=source_db.url)
+                if not source_real.workable:
+                    source_real.hashsum = None
+                    SourceRepository.update(source_real)
                     bar()
+                    continue
 
-            return self._proxy_list
+                if source_real.hashsum == source_db.hashsum:
+                    bar()
+                    continue
 
-    def __call_source(self, link: str):
-        try:
-            response = requests.get(link)
-        except RequestException as message:
-            print(View.paint('\t\t{BYellow}%s {ColorOff}>> {BRed}Error: {Red} %s{ColorOff}') % (link, message))
-            return
+                proxy_list += source_real.proxies
+                SourceRepository.update(source_real)
+                bar()
+                bar.title(self.__output_title(len(proxy_list)))
 
-        if response.status_code != 200:
-            return
+        return proxy_list
 
-        line: list[str] = response.text.split('\n')
-        for proxy in line:
-            if self.is_proxy(proxy):
-                split = proxy.split(':')
-                self._proxy_list.append(ProxyDto(
-                    ip=split[0],
-                    port=int(split[1])
-                ))
+    @staticmethod
+    def __output_title(proxy_count: int) -> str:
+        string: str = 'Check Sources'
+        string2: str = ' [%d]:' % proxy_count
+        count_spaces: int = View.get_count_spaces_for_line_up(string + string2, 25)
+        return View.paint('\t{Yellow}%s {BBlue}[{Blue}%d{BBlue}]{Yellow}:%s{ColorOff}') % (
+            string,
+            proxy_count,
+            ' ' * count_spaces
+        )

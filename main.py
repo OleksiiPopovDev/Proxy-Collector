@@ -92,7 +92,7 @@ if __name__ == "__main__":
     #exit()
     View([
         MenuItemDto('Run Migration Database', 'migrate', run_migration),
-        MenuItemDto('Validate Sources', 'validate-sources', run_source_validator),
+        MenuItemDto('Refresh Sources', 'refresh-sources', run_source_validator),
         MenuItemDto('Gather IP from sources', 'link-gather', run_gather),
         MenuItemDto('Found IP via ProxyBroker', 'broker-gather', run_proxybroker),
         MenuItemDto('Check New proxies', 'check', run_checker)

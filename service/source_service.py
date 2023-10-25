@@ -20,7 +20,7 @@ class SourceService:
         with open('resources/source_txt_proxies_links.txt', 'r') as file:
             links: list[str] = file.readlines()
             with alive_bar(len(links)) as bar:
-                string: str = 'Checking Sources:'
+                string: str = 'Refresh Sources:'
                 count_spaces: int = View.get_count_spaces_for_line_up(string, 25)
                 bar.title(View.paint('\t{Yellow}%s%s{ColorOff}') % (string, ' ' * count_spaces))
                 for link in links:
@@ -51,8 +51,9 @@ class SourceService:
 
             proxies_list: list[ProxyDto] = []
             if parse_proxies:
-                line: list[str] = content.split('\n')
+                line: list[str] = content.splitlines()
                 for proxy in line:
+                    proxy = proxy.strip()
                     if self.is_proxy(proxy):
                         split = proxy.split(':')
                         proxies_list.append(ProxyDto(
