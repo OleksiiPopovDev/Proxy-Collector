@@ -7,6 +7,7 @@ install:
 	@sh install.sh
 	@pip3 install -r requirements.txt
 	@python3 main.py --migrate -y
+	@python3 main.py --validate-sources
 	@python3 main.py
 
 .PHONY: run

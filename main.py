@@ -1,3 +1,4 @@
+import getopt
 import re
 from dotenv import load_dotenv
 from bash_menu_builder import View, MenuItemDto
@@ -87,9 +88,11 @@ def run_checker():
 
 
 if __name__ == "__main__":
+    #print(getopt.getopt(sys.argv[1:], 'a:b:c', ['letter-a=', 'letter-b=', 'letter-c=']))
+    #exit()
     View([
         MenuItemDto('Run Migration Database', 'migrate', run_migration),
-        MenuItemDto('Validate Sources', 'migrate', run_source_validator),
+        MenuItemDto('Validate Sources', 'validate-sources', run_source_validator),
         MenuItemDto('Gather IP from sources', 'link-gather', run_gather),
         MenuItemDto('Found IP via ProxyBroker', 'broker-gather', run_proxybroker),
         MenuItemDto('Check New proxies', 'check', run_checker)

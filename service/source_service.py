@@ -1,16 +1,20 @@
-import requests
 import hashlib
+import requests
+import re
 from alive_progress import alive_bar
 from bash_menu_builder import View
 from requests.exceptions import RequestException
-
-from dto.country_dto import CountryDto
 from dto.source_dto import SourceDto
+from dto.proxy_dto import ProxyDto
+from repository.source_repository import SourceRepository
+from peewee import IntegrityError
 
 
 class SourceService:
     def __init__(self):
         self.__source_list: list[SourceDto] = []
+        self.__new_source_count: int = 0
+        self.__duplicate_source_count: int = 0
 
     def seed_sources(self):
         with open('resources/source_txt_proxies_links.txt', 'r') as file:
@@ -20,47 +24,50 @@ class SourceService:
                 count_spaces: int = View.get_count_spaces_for_line_up(string, 25)
                 bar.title(View.paint('\t{Yellow}%s%s{ColorOff}') % (string, ' ' * count_spaces))
                 for link in links:
-                    self.__prepare_sources(link)
+                    source = self.get_source_content(link.strip(), parse_proxies=False)
+                    try:
+                        source.hashsum = None
+                        SourceRepository.save(source)
+                        self.__new_source_count += 1
+                    except IntegrityError:
+                        self.__duplicate_source_count += 1
                     bar()
-                    exit()
 
-            return self._proxy_list
+            print(View.paint('\t{Cyan}Saved new Sources {ColorOff}>> {BGreen}%d') % self.__new_source_count)
+            print(View.paint('\t{Cyan}Duplicates Sources {ColorOff}>> {BRed}%d') % self.__duplicate_source_count)
 
-            # countries = self.__prepare_countries(json.load(file))
-            # country_names: list[str] = list(map(lambda c: c.name, countries))
-            # biggest_name: int = View.count_biggest_line(country_names)
-            #
-            # with alive_bar(len(countries)) as bar:
-            #     for country in countries:
-            #         count_spaces: int = View.get_count_spaces_for_line_up(country.name, biggest_name)
-            #         try:
-            #             string: str = View.paint('\t{Yellow}Seed Country {ColorOff}-> {BCyan}%s%s{ColorOff}')
-            #             bar.title(string % (country.name, ' ' * count_spaces))
-            #
-            #             CountryRepository.save(country)
-            #         except IntegrityError as message:
-            #             string: str = View.paint('{Yellow}[{BBlue}%s{Yellow}]%s {BRed}Error: {Red}%s{ColorOff}')
-            #             print(string % (country.name, ' ' * count_spaces, message))
-            #
-            #         time.sleep(0.01)
-            #         bar()
-
-    def get_source_content(self, link: str) -> str:
+    def get_source_content(self, link: str, parse_proxies: bool = True) -> SourceDto:
         try:
-            response = requests.get(link)
-            return response.text
+            source_content = requests.get(link)
 
         except RequestException as message:
             print(View.paint('\t\t{BYellow}%s {ColorOff}>> {BRed}Error: {Red} %s{ColorOff}') % (link, message))
-            return ''
 
-    def __prepare_sources(self, link: str) -> None:
-        source_content: str = self.get_source_content(link.strip())
-        hasher = hashlib.sha256()
-        hasher.update(source_content.encode('utf-8'))
+        else:
+            status_code = source_content.status_code
+            hasher = hashlib.sha256()
+            content = source_content.text
+            hasher.update(content.encode('utf-8'))
 
-        self.__source_list.append(SourceDto(
-            url=link,
-            hashsum=hasher.hexdigest(),
-            workable=False if source_content == '' else True
-        ))
+            proxies_list: list[ProxyDto] = []
+            if parse_proxies:
+                line: list[str] = content.split('\n')
+                for proxy in line:
+                    if self.is_proxy(proxy):
+                        split = proxy.split(':')
+                        proxies_list.append(ProxyDto(
+                            ip=split[0],
+                            port=int(split[1])
+                        ))
+
+            return SourceDto(
+                url=link,
+                hashsum=hasher.hexdigest() if status_code == 200 else None,
+                workable=False if status_code != 200 else True,
+                proxies=proxies_list
+            )
+
+    @staticmethod
+    def is_proxy(string: str) -> bool:
+        is_proxy = re.match('^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}:\d{1,5}$', string)
+        return is_proxy is not None
