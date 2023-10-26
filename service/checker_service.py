@@ -20,6 +20,8 @@ class CheckerService:
         self.proxy_repository = ProxyRepository()
         self.pack: int = int(os.getenv('NUM_PROXIES_IN_CHECK_BATCH'))
         self.timeout: int = int(os.getenv('PROXY_RESPONSE_TIMEOUT'))
+        self.show_success_result: bool = bool(int(os.getenv('SHOW_ONLY_SUCCESS_RESULT')))
+        print(self.show_success_result, os.getenv('SHOW_ONLY_SUCCESS_RESULT'))
 
     def run(self) -> None:
         count: int = self.proxy_repository.get_unchecked_count()
@@ -52,10 +54,11 @@ class CheckerService:
             start_time = time.time()
             resp = await session.get(url=url, proxy=proxy_url, **kwargs)
         except Exception as message:
-            print(
-                View.paint('{Yellow}[{Red}-{Yellow}]{ColorOff} %s%s => %s') %
-                (proxy, (' ' * spaces_count), message)
-            )
+            if not self.show_success_result:
+                print(
+                    View.paint('{Yellow}[{Red}-{Yellow}]{ColorOff} %s%s => %s') %
+                    (proxy, (' ' * spaces_count), message)
+                )
             status = StatusDto(
                 ip=ProxyDto(ip=ip, port=port),
                 country=CountryDto(name=None),
