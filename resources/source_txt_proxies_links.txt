@@ -10,7 +10,6 @@ https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/prox
 https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks4.txt
 https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-https.txt
 https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt
-https://raw.githubusercontent.com/OleksiiPopovDev/Proxy-Collector/main/resources/ips.txt
 https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt
 https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt
 https://raw.githubusercontent.com/RX4096/proxy-list/main/online/http.txt
