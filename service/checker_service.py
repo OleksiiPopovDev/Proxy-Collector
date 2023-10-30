@@ -7,7 +7,7 @@ import math
 from alive_progress import alive_bar
 from repository.proxy_repository import ProxyRepository
 from repository.status_repository import StatusRepository
-from bash_menu_builder import View
+from bash_menu_builder import Draw
 from dto.status_dto import StatusDto
 from dto.country_dto import CountryDto
 from dto.proxy_dto import ProxyDto
@@ -21,7 +21,6 @@ class CheckerService:
         self.pack: int = int(os.getenv('NUM_PROXIES_IN_CHECK_BATCH'))
         self.timeout: int = int(os.getenv('PROXY_RESPONSE_TIMEOUT'))
         self.show_success_result: bool = bool(int(os.getenv('SHOW_ONLY_SUCCESS_RESULT')))
-        print(self.show_success_result, os.getenv('SHOW_ONLY_SUCCESS_RESULT'))
 
     def run(self) -> None:
         count: int = self.proxy_repository.get_unchecked_count()
@@ -29,7 +28,7 @@ class CheckerService:
 
         with alive_bar(count) as self.bar:
             for iteration in range(1, iterates + 1):
-                string: str = View.paint('\t{Yellow}Pack {BYellow}%d {Red}[{Yellow}%d from %d{Red}]{ColorOff}')
+                string: str = Draw.paint('\t{Yellow}Pack {BYellow}%d {Red}[{Yellow}%d from %d{Red}]{ColorOff}')
                 self.bar.title(string % (iteration, (iteration * self.pack), count))
                 asyncio.run(self.check(iteration))
 
@@ -56,7 +55,7 @@ class CheckerService:
         except Exception as message:
             if not self.show_success_result:
                 print(
-                    View.paint('{Yellow}[{Red}-{Yellow}]{ColorOff} %s%s => %s') %
+                    Draw.paint('{Yellow}[{Red}-{Yellow}]{ColorOff} %s%s => %s') %
                     (proxy, (' ' * spaces_count), message)
                 )
             status = StatusDto(
@@ -72,7 +71,7 @@ class CheckerService:
             time_count = time.time() - start_time
             spaces_count_2 = 25 - len(str(time_count))
             print(
-                View.paint(
+                Draw.paint(
                     '{Yellow}[{BGreen}+{Yellow}]{Green} %s%s {ColorOff}=> Time: {Blue}%s%s {ColorOff}Response: %s') %
                 (proxy, (' ' * spaces_count), time_count, (' ' * spaces_count_2), json_data)
             )

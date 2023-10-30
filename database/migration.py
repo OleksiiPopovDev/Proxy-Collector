@@ -1,6 +1,6 @@
 from database.connector import Connector
 from alive_progress import alive_bar
-from bash_menu_builder import View
+from bash_menu_builder import Draw
 from peewee import Model
 from database.model.country_model import Country
 from database.model.source_model import Source
@@ -28,13 +28,13 @@ class Migration(Connector):
         with alive_bar(len(self.__tables)) as bar:
             for table_name in self.__tables:
                 bar.title(
-                    View.paint('\t{Yellow}Creating table{ColorOff} -> {BYellow}%s{ColorOff}' % table_name)
+                    Draw.paint('\t{Yellow}Creating table{ColorOff} -> {BYellow}%s{ColorOff}' % table_name)
                 )
 
                 model = self.__tables[table_name]
                 db.create_tables([model])
 
-                print(View.paint(
+                print(Draw.paint(
                     '{Yellow}Created table {ColorOff} >> {BGreen}%s{ColorOff}' % table_name
                 ))
 

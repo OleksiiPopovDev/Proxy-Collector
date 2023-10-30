@@ -4,7 +4,7 @@ from dto.country_dto import CountryDto
 from proxybroker import Broker
 from asyncio import Queue
 from repository.country_repository import CountryRepository
-from bash_menu_builder import View
+from bash_menu_builder import Draw
 from alive_progress import alive_bar
 import asyncio
 
@@ -39,8 +39,8 @@ class BrokerProxyGatherService(ProxyGatherAbstract):
         with alive_bar(self.__limit) as bar:
             while True:
                 title = 'Broker runing...'
-                count_spaces: int = View.get_count_spaces_for_line_up('Broker running...', 26)
-                bar.title(View.paint('\t{Yellow}%s%s{ColorOff}') % (title, ' ' * count_spaces))
+                count_spaces: int = Draw.get_count_spaces_for_line_up('Broker running...', 26)
+                bar.title(Draw.paint('\t{Yellow}%s%s{ColorOff}') % (title, ' ' * count_spaces))
 
                 proxy = await proxies.get()
                 if proxy is None: break

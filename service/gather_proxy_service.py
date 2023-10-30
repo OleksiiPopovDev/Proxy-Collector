@@ -1,5 +1,5 @@
 from alive_progress import alive_bar
-from bash_menu_builder import View
+from bash_menu_builder import Draw
 from peewee import IntegrityError
 
 from repository.proxy_repository import ProxyRepository
@@ -26,9 +26,9 @@ class GatherProxyService:
         with alive_bar(len(proxies_list)) as bar:
             for proxy in proxies_list:
                 ip = '%s:%d' % (proxy.ip, proxy.port)
-                count_spaces: int = View.get_count_spaces_for_line_up(ip, 25)
+                count_spaces: int = Draw.get_count_spaces_for_line_up(ip, 25)
                 try:
-                    string: str = View.paint('\t{Yellow}%s%s{ColorOff}')
+                    string: str = Draw.paint('\t{Yellow}%s%s{ColorOff}')
                     bar.title(string % (ip, ' ' * count_spaces))
 
                     ProxyRepository.save(proxy)

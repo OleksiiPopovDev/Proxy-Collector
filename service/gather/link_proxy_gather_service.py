@@ -1,5 +1,5 @@
 from alive_progress import alive_bar
-from bash_menu_builder import View
+from bash_menu_builder import Draw
 
 from dto.proxy_dto import ProxyDto
 from repository.source_repository import SourceRepository
@@ -37,8 +37,8 @@ class LinkProxyGatherService(ProxyGatherAbstract):
     def __output_title(proxy_count: int) -> str:
         string: str = 'Check Sources'
         string2: str = ' [%d]:' % proxy_count
-        count_spaces: int = View.get_count_spaces_for_line_up(string + string2, 25)
-        return View.paint('\t{Yellow}%s {BBlue}[{Blue}%d{BBlue}]{Yellow}:%s{ColorOff}') % (
+        count_spaces: int = Draw.get_count_spaces_for_line_up(string + string2, 25)
+        return Draw.paint('\t{Yellow}%s {BBlue}[{Blue}%d{BBlue}]{Yellow}:%s{ColorOff}') % (
             string,
             proxy_count,
             ' ' * count_spaces

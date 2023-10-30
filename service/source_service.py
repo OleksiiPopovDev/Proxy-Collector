@@ -2,7 +2,7 @@ import hashlib
 import requests
 import re
 from alive_progress import alive_bar
-from bash_menu_builder import View
+from bash_menu_builder import Draw
 from requests.exceptions import RequestException
 from dto.source_dto import SourceDto
 from dto.proxy_dto import ProxyDto
@@ -21,8 +21,8 @@ class SourceService:
             links: list[str] = file.readlines()
             with alive_bar(len(links)) as bar:
                 string: str = 'Refresh Sources:'
-                count_spaces: int = View.get_count_spaces_for_line_up(string, 25)
-                bar.title(View.paint('\t{Yellow}%s%s{ColorOff}') % (string, ' ' * count_spaces))
+                count_spaces: int = Draw.get_count_spaces_for_line_up(string, 25)
+                bar.title(Draw.paint('\t{Yellow}%s%s{ColorOff}') % (string, ' ' * count_spaces))
                 for link in links:
                     source = self.get_source_content(link.strip(), parse_proxies=False)
                     try:
@@ -33,15 +33,15 @@ class SourceService:
                         self.__duplicate_source_count += 1
                     bar()
 
-            print(View.paint('\t{Cyan}Saved new Sources {ColorOff}>> {BGreen}%d') % self.__new_source_count)
-            print(View.paint('\t{Cyan}Duplicates Sources {ColorOff}>> {BRed}%d') % self.__duplicate_source_count)
+            print(Draw.paint('\t{Cyan}Saved new Sources {ColorOff}>> {BGreen}%d') % self.__new_source_count)
+            print(Draw.paint('\t{Cyan}Duplicates Sources {ColorOff}>> {BRed}%d') % self.__duplicate_source_count)
 
     def get_source_content(self, link: str, parse_proxies: bool = True) -> SourceDto:
         try:
             source_content = requests.get(link)
 
         except RequestException as message:
-            print(View.paint('\t\t{BYellow}%s {ColorOff}>> {BRed}Error: {Red} %s{ColorOff}') % (link, message))
+            print(Draw.paint('\t\t{BYellow}%s {ColorOff}>> {BRed}Error: {Red} %s{ColorOff}') % (link, message))
 
         else:
             status_code = source_content.status_code

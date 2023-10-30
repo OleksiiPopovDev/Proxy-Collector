@@ -1,7 +1,7 @@
 import getopt
 import re
 from dotenv import load_dotenv
-from bash_menu_builder import View, MenuItemDto
+from bash_menu_builder import SelectMenu, MenuItemDto, Draw
 from database.migration import Migration
 from service.country_service import CountryService
 from service.source_service import SourceService
@@ -17,7 +17,7 @@ load_dotenv()
 
 def banner() -> str:
     with (open('resources/banner.txt', 'r') as banner_file):
-        return View.paint(banner_file.read()) \
+        return Draw.paint(banner_file.read()) \
             .replace('{VERSION}', os.getenv('VERSION')) \
             .replace('{AUTHOR}', os.getenv('AUTHOR_NAME')) \
             .replace('{EMAIL}', os.getenv('AUTHOR_EMAIL')) \
@@ -25,7 +25,7 @@ def banner() -> str:
 
 
 def run_migration():
-    View.separator()
+    Draw.separator()
 
     question: str = ('\t{Yellow}Are you sure that want run migration? '
                      '{BYellow}Previous database with all data will remove.'
@@ -33,32 +33,32 @@ def run_migration():
 
     if (
             '-y' not in sys.argv and
-            (input(View.paint(question)) or 'N') not in ['Y', 'y']
+            (input(Draw.paint(question)) or 'N') not in ['Y', 'y']
     ):
         return
 
     migration = Migration()
     migration.run()
-    View.separator()
+    Draw.separator()
     country_service = CountryService()
     country_service.seed_countries()
-    View.separator()
+    Draw.separator()
 
 
 def run_source_validator():
-    View.separator()
+    Draw.separator()
     source = SourceService()
     source.seed_sources()
-    View.separator()
+    Draw.separator()
 
 
 def run_gather():
-    View.separator()
+    Draw.separator()
     gather = GatherProxyService(LinkProxyGatherService())
     gather.run()
-    print(View.paint('\t\t{Cyan}Saved new IPs {ColorOff}>> {BGreen}%d') % gather.get_count_saved())
-    print(View.paint('\t\t{Cyan}Duplicates IPs {ColorOff}>> {BRed}%d') % gather.get_count_duplicates())
-    View.separator()
+    print(Draw.paint('\t\t{Cyan}Saved new IPs {ColorOff}>> {BGreen}%d') % gather.get_count_saved())
+    print(Draw.paint('\t\t{Cyan}Duplicates IPs {ColorOff}>> {BRed}%d') % gather.get_count_duplicates())
+    Draw.separator()
 
 
 def run_proxybroker():
@@ -68,7 +68,7 @@ def run_proxybroker():
         question: str = ('\t{Yellow}How many Proxies IPs search? '
                          '\n\t{Red}[{ColorOff}Default: {BCyan}100{Red}]{ColorOff} -> ')
         try:
-            count = int(input(View.paint(question))) or 100
+            count = int(input(Draw.paint(question))) or 100
         except ValueError:
             count = 100
     else:
@@ -90,10 +90,13 @@ def run_checker():
 if __name__ == "__main__":
     #print(getopt.getopt(sys.argv[1:], 'a:b:c', ['letter-a=', 'letter-b=', 'letter-c=']))
     #exit()
-    View([
-        MenuItemDto('Run Migration Database', 'migrate', run_migration),
-        MenuItemDto('Refresh Sources', 'refresh-sources', run_source_validator),
-        MenuItemDto('Gather IP from sources', 'link-gather', run_gather),
-        MenuItemDto('Found IP via ProxyBroker', 'broker-gather', run_proxybroker),
-        MenuItemDto('Check New proxies', 'check', run_checker)
-    ], banner())
+    SelectMenu(
+        banner=banner(),
+        menu=[
+            MenuItemDto(title='Run Migration Database', option='migrate', handler=run_migration),
+            MenuItemDto(title='Refresh Sources', option='refresh-sources', handler=run_source_validator),
+            MenuItemDto(title='Gather IP from sources', option='link-gather', handler=run_gather),
+            MenuItemDto(title='Found IP via ProxyBroker', option='broker-gather', handler=run_proxybroker),
+            MenuItemDto(title='Check New proxies', option='check', handler=run_checker)
+        ]
+    )
