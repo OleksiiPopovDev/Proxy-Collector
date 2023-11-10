@@ -1,13 +1,16 @@
 import hashlib
-import requests
 import re
+from typing import Union
+
+import requests
 from alive_progress import alive_bar
 from bash_menu_builder import Draw
-from requests.exceptions import RequestException
-from dto.source_dto import SourceDto
-from dto.proxy_dto import ProxyDto
-from repository.source_repository import SourceRepository
 from peewee import IntegrityError
+from requests.exceptions import RequestException
+
+from dto.proxy_dto import ProxyDto
+from dto.source_dto import SourceDto
+from repository.source_repository import SourceRepository
 
 
 class SourceService:
@@ -25,6 +28,9 @@ class SourceService:
                 bar.title(Draw.paint('\t{Yellow}%s%s{ColorOff}') % (string, ' ' * count_spaces))
                 for link in links:
                     source = self.get_source_content(link.strip(), parse_proxies=False)
+                    if not source:
+                        continue
+
                     try:
                         source.hashsum = None
                         SourceRepository.save(source)
@@ -36,12 +42,13 @@ class SourceService:
             print(Draw.paint('\t{Cyan}Saved new Sources {ColorOff}>> {BGreen}%d') % self.__new_source_count)
             print(Draw.paint('\t{Cyan}Duplicates Sources {ColorOff}>> {BRed}%d') % self.__duplicate_source_count)
 
-    def get_source_content(self, link: str, parse_proxies: bool = True) -> SourceDto:
+    def get_source_content(self, link: str, parse_proxies: bool = True) -> Union[SourceDto, bool]:
         try:
             source_content = requests.get(link)
 
         except RequestException as message:
             print(Draw.paint('\t\t{BYellow}%s {ColorOff}>> {BRed}Error: {Red} %s{ColorOff}') % (link, message))
+            return False
 
         else:
             status_code = source_content.status_code
