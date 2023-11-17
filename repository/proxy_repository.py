@@ -17,11 +17,11 @@ class ProxyRepository:
             response_time=proxy.response_time,
         )
 
-    def get_unchecked_count(self):
-        return self.__unchecked_query().count()
+    def get_unchecked_count(self, tries_limit: int):
+        return self.__unchecked_query(tries_limit).count()
 
-    def get_unchecked(self, limit: int = None, iteration: int = None):
-        query = self.__unchecked_query()
+    def get_unchecked(self, tries_limit: int, limit: int = None, iteration: int = None):
+        query = self.__unchecked_query(tries_limit)
 
         if limit is not None:
             query = query.limit(limit)
@@ -31,13 +31,13 @@ class ProxyRepository:
         return query.execute()
 
     @staticmethod
-    def __unchecked_query():
+    def __unchecked_query(tries_limit: int = 5):
         return (
             IP
             .select()
             .join(Status, JOIN.LEFT_OUTER, on=(IP.id == Status.ip))
             .where((Status.status == ProxyStatus.INVALID.value) | (Status.status >> None))
-            .where(IP.tries < 5)
+            .where(IP.tries < tries_limit)
             .group_by(IP)
             .order_by(Status.created_at.desc(), IP.created_at.desc())
         )

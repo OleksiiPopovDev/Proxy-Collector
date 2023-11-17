@@ -21,9 +21,10 @@ class CheckerService:
         self.pack: int = int(os.getenv('NUM_PROXIES_IN_CHECK_BATCH'))
         self.timeout: int = int(os.getenv('PROXY_RESPONSE_TIMEOUT'))
         self.show_success_result: bool = bool(int(os.getenv('SHOW_ONLY_SUCCESS_RESULT')))
+        self.tries_limit: int = int(os.getenv('LIMIT_TRIES_CHECK_PROXY'))
 
     def run(self) -> None:
-        count: int = self.proxy_repository.get_unchecked_count()
+        count: int = self.proxy_repository.get_unchecked_count(self.tries_limit)
         iterates: int = math.ceil(count / self.pack)
 
         with alive_bar(count) as self.bar:
@@ -36,7 +37,11 @@ class CheckerService:
         timeout = aiohttp.ClientTimeout(total=self.timeout)
         async with aiohttp.ClientSession(timeout=timeout) as session:
             tasks = []
-            proxies = self.proxy_repository.get_unchecked(limit=self.pack, iteration=iteration)
+            proxies = self.proxy_repository.get_unchecked(
+                tries_limit=self.tries_limit,
+                limit=self.pack,
+                iteration=iteration
+            )
 
             for proxy in proxies:
                 tasks.append(self.send_request(session=session, ip=proxy.ip, port=proxy.port, **kwargs))
