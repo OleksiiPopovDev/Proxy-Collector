@@ -56,8 +56,9 @@ class CheckerService:
             if not self.show_success_result:
                 print(
                     Draw.paint('{Yellow}[{Red}-{Yellow}]{ColorOff} %s%s => %s') %
-                    (proxy, (' ' * spaces_count), message)
+                    (proxy, (' ' * spaces_count), (message if not isinstance(message, TimeoutError) else message))
                 )
+
             status = StatusDto(
                 ip=ProxyDto(ip=ip, port=port),
                 country=CountryDto(name=None),
