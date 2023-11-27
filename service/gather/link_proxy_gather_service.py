@@ -16,6 +16,8 @@ class LinkProxyGatherService(ProxyGatherAbstract):
             bar.title(self.__output_title(0))
             for source_db in sources:
                 source_real = source_service.get_source_content(link=source_db.url)
+                if not source_real:
+                    continue
                 if not source_real.workable:
                     source_real.hashsum = None
                     SourceRepository.update(source_real)
