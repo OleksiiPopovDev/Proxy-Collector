@@ -29,6 +29,7 @@ class SourceService:
                 for link in links:
                     source = self.get_source_content(link.strip(), parse_proxies=False)
                     if not source:
+                        bar()
                         continue
 
                     try:
