@@ -1,5 +1,14 @@
 # Proxy-Collector
 
+[![Python Version](https://app.codacy.com/project/badge/Grade/1092c5114dba43dbb251d1a500c671b9)](https://app.codacy.com/gh/OleksiiPopovDev/Proxy-Collector/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+![Python Version](https://img.shields.io/badge/Python-v3.9-orange?logo=python&logoColor=white)
+![Python Version](https://img.shields.io/github/languages/code-size/OleksiiPopovDev/Proxy-Collector)
+
+<p align="center">
+<img src="./doc/logo.png" alt="Proxy Collector" style="width:50%;" />
+</p>
+
+
 Script on Python for finding and checking proxies from open sources.
 > [!WARNING]  
 > Do not use these proxy IP addresses for everyday Internet surfing, your own social networks, banking, etc. These are not security-verified IP addresses and they can steal your personal data.
