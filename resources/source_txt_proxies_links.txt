@@ -68,3 +68,4 @@ https://fastly.jsdelivr.net/gh/jetkai/proxy-list@main/online-proxies/txt/proxies
 https://fastly.jsdelivr.net/gh/hookzof/socks5_list@master/proxy.txt
 https://fastly.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/socks5.txt
 https://fastly.jsdelivr.net/gh/roosterkid/openproxylist@main/SOCKS5_RAW.txt
+https://rcloak.com/api/proxies/raw?protocol=all
